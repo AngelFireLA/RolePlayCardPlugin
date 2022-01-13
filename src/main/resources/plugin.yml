@@ -1,0 +1,9 @@
+name: RoleplayCard
+version: '${project.version}'
+main: me.angelfire.rpcard.RpCard
+api-version: 1.17
+prefix: Plugin Started
+authors: [ AngelFire ]
+description: Helps tracking who is who in the roleplay
+commands:
+ rpcard:
