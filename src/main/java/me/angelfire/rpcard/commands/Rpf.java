@@ -1,7 +1,6 @@
 package me.angelfire.rpcard.commands;
 
 import java.io.File;
-import java.io.ObjectInputFilter.Config;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,20 +21,14 @@ import me.angelfire.rpcard.json.ProfileSerializationManager;
 import me.angelfire.rpcard.utils.FileUtils;
 
 public class Rpf implements @Nullable CommandExecutor, TabCompleter{
-	
-	
-	private File savedir;
-	private RpCard plugin;
-	private FileConfiguration config;
 
-	
-	
-	public Rpf (RpCard plugin) {
-		this.plugin = plugin;
-		this.savedir = new File(plugin.getDataFolder(), "/profiles");
-		this.config = plugin.getConfig();
+
+	private File savedir;
+	public Rpf () {
+		this.savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
+		RpCard.INSTANCE.getConfig();
 	}
-	
+
 	public static boolean isInt(String s) {
         try {
             Integer.parseInt(s);
@@ -48,12 +40,10 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		
 		Player player = (Player) sender;
 		final File file = new File(savedir, player.getName() + ".json");
-		final ProfileSerializationManager profileSerializationManager = plugin.getProfileSerializationManager();
+		final ProfileSerializationManager profileSerializationManager = RpCard.INSTANCE.getProfileSerializationManager();
     	if (args.length == 0) return false;
-    			
 		        if (args[0].equalsIgnoreCase("set")) {
 		        	if(args[1].equalsIgnoreCase("genre")) {
 		        		if (args[2].equalsIgnoreCase("garçon")) {
@@ -66,7 +56,7 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        		}
 		        		else {
 		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-		        			final File file1 = new File(savedir, player.getName() + ".json");	
+		        			final File file1 = new File(savedir, player.getName() + ".json");
 		        			final Profile profile = Profile.createProfile(player.getName(), "garçon", "None", -1, "None", "None", "None", "None", "None", "None");
 		        			final String json = profileSerializationManager.serialize(profile);
 		        			FileUtils.save(file1, json);
@@ -83,7 +73,7 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 				        		}
 				        		else {
 				        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-				        			final File file1 = new File(savedir, player.getName() + ".json");	
+				        			final File file1 = new File(savedir, player.getName() + ".json");
 				        			final Profile profile = Profile.createProfile(player.getName(), "fille", "None", -1, "None", "None", "None", "None", "None", "None");
 				        			final String json = profileSerializationManager.serialize(profile);
 				        			FileUtils.save(file1, json);
@@ -91,7 +81,7 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 								}
 		        		}
 		        	}
-		        		
+
 		        	else if(args[1].equalsIgnoreCase("age")) {
 		        		if (isInt(args[2])) {
 		        		if(file.exists()) {
@@ -149,7 +139,7 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 				        			player.sendMessage(ChatColor.GREEN + "Profil créé");
 								}
 		        		}
-		        		
+
 		        	}
 		        	else if (args[1].equalsIgnoreCase("race")) {
 		        		if(file.exists()) {
@@ -239,11 +229,11 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        }
 		        if (args[0].equalsIgnoreCase("see")) {
 		        	String charsToRemove = "[]";
-		    		
+
 		        	if (args.length == 1) {
-		        		
+
 		        		if(file.exists()) {
-		        			
+
 		            		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String filtered2 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getNomRp().toString());
@@ -256,7 +246,7 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        			String filtered9 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getRace().toString());
 		        			Integer age = profile.getAge();
 		        			String filtered10 = CharMatcher.anyOf(charsToRemove).removeFrom(age.toString());
-		        			String wiki = plugin.getConfig().getString("lien.wiki");
+		        			String wiki = RpCard.INSTANCE.getConfig().getString("liens.wiki");
 		        			player.sendMessage("§lJoueur" + filtered2 + " :");
 		        			player.sendMessage("Race : " + filtered9);
 		        			player.sendMessage("Age : " + filtered10);
@@ -268,7 +258,7 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        			player.sendMessage("Origine : " + filtered8);
 		        			player.sendMessage(wiki + player.getName());
 
-		        			
+
 
 		            		}
 		        		else {
@@ -294,31 +284,32 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		            	}
 		            	else {
 		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-		        			final File file1 = new File(savedir, player.getName() + ".json");	
+		        			final File file1 = new File(savedir, player.getName() + ".json");
 		        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Vivant", -1, "None", "None", "None", "None", "None", "None");
 		        			final String json = profileSerializationManager.serialize(profile);
 
 		        			FileUtils.save(file1, json);
 		        			player.sendMessage(ChatColor.GREEN + "Profil créé");
-		        			
+
 		        		}
 					}
 		        }
 		        return false;
 		    }
-				
-	
+
+
 
 		    @Override
 		    public List<String> onTabComplete(final CommandSender sender, @NotNull Command cmd, @NotNull String alias, @NotNull String[] args) {
 		        if (args.length == 1) return Arrays.asList("set", "see");
-		        if (args[0].equalsIgnoreCase("set") && args.length == 2) return Arrays.asList("genre", "race", "age", "vivant", "staus", "titre", "religion", "métier", "origine");
-		        if (args[1].equalsIgnoreCase("alive") && args.length == 3) return Arrays.asList("true", "false");
-				return null; 
+		        if (args[0].equalsIgnoreCase("set") && args.length == 2) return Arrays.asList("genre", "race", "age", "status", "titre", "religion", "métier", "origine");
+		        if (args[1].equalsIgnoreCase("status") && args.length == 3) return Arrays.asList("vivant", "mort");
+		        if (args[1].equalsIgnoreCase("genre") && args.length == 3) return Arrays.asList("garçon", "fille");
+				return null;
 		        }
-		    
-		    
 
-	
+
+
+
 
 }
