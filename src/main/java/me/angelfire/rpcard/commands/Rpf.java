@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.CharMatcher;
 
@@ -20,7 +19,7 @@ import me.angelfire.rpcard.RpCard;
 import me.angelfire.rpcard.json.ProfileSerializationManager;
 import me.angelfire.rpcard.utils.FileUtils;
 
-public class Rpf implements @Nullable CommandExecutor, TabCompleter{
+public class Rpf implements CommandExecutor, TabCompleter{
 
 
 	private File savedir;
@@ -50,14 +49,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        			if(file.exists()) {
 		        		final String json = FileUtils.loadContent(file);
 	        			final Profile profile = profileSerializationManager.deserialize(json);
-	        			final Profile profile1 = Profile.createProfile(player.getName(), "garçon", profile.getDeadoralive(), profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+	        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), profile.getDeadoralive(), profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 	        			final String json1 = profileSerializationManager.serialize(profile1);
 	        			FileUtils.save(file, json1);
 		        		}
 		        		else {
 		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 		        			final File file1 = new File(savedir, player.getName() + ".json");
-		        			final Profile profile = Profile.createProfile(player.getName(), "garçon", "None", -1, "None", "None", "None", "None", "None", "None");
+		        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "None", -1, "None", "None", "None", "None", "None", "None");
 		        			final String json = profileSerializationManager.serialize(profile);
 		        			FileUtils.save(file1, json);
 		        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -67,14 +66,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 			        		if(file.exists()) {
 				        		final String json = FileUtils.loadContent(file);
 			        			final Profile profile = profileSerializationManager.deserialize(json);
-			        			final Profile profile1 = Profile.createProfile(player.getName(), "fille", profile.getDeadoralive(), profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+			        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), profile.getDeadoralive(), profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 			        			final String json1 = profileSerializationManager.serialize(profile1);
 			        			FileUtils.save(file, json1);
 				        		}
 				        		else {
 				        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 				        			final File file1 = new File(savedir, player.getName() + ".json");
-				        			final Profile profile = Profile.createProfile(player.getName(), "fille", "None", -1, "None", "None", "None", "None", "None", "None");
+				        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "None", -1, "None", "None", "None", "None", "None", "None");
 				        			final String json = profileSerializationManager.serialize(profile);
 				        			FileUtils.save(file1, json);
 				        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -87,14 +86,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        		if(file.exists()) {
 		        		final String json = FileUtils.loadContent(file);
 	        			final Profile profile = profileSerializationManager.deserialize(json);
-	        			final Profile profile1 = Profile.createProfile(player.getName(), profile.getGirlOrBoy(), profile.getDeadoralive(), Integer.parseInt(args[2]), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+	        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), profile.getDeadoralive(), Integer.parseInt(args[2]), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 	        			final String json1 = profileSerializationManager.serialize(profile1);
 	        			FileUtils.save(file, json1);
 		        		}
 		        		else {
 		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 		        			final File file1 = new File(savedir, player.getName() + ".json");
-		        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "None", Integer.parseInt(args[2]), "None", "None", "None", "None", "None", "None");
+		        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "None", Integer.parseInt(args[2]), "None", "None", "None", "None", "None", "None");
 		        			final String json = profileSerializationManager.serialize(profile);
 		        			FileUtils.save(file1, json);
 		        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -109,14 +108,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 			        		if(file.exists()) {
 				        		final String json = FileUtils.loadContent(file);
 			        			final Profile profile = profileSerializationManager.deserialize(json);
-			        			final Profile profile1 = Profile.createProfile(player.getName(), profile.getGirlOrBoy(), "Vivant", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+			        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 			        			final String json1 = profileSerializationManager.serialize(profile1);
 			        			FileUtils.save(file, json1);
 				        		}
 				        		else {
 				        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 				        			final File file1 = new File(savedir, player.getName() + ".json");
-				        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Vivant", -1, "None", "None", "None", "None", "None", "None");
+				        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", "None", "None", "None", "None");
 				        			final String json = profileSerializationManager.serialize(profile);
 				        			FileUtils.save(file1, json);
 				        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -126,14 +125,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 			        		if(file.exists()) {
 				        		final String json = FileUtils.loadContent(file);
 			        			final Profile profile = profileSerializationManager.deserialize(json);
-			        			final Profile profile1 = Profile.createProfile(player.getName(), profile.getGirlOrBoy(), "Mort", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+			        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), "Mort", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 			        			final String json1 = profileSerializationManager.serialize(profile1);
 			        			FileUtils.save(file, json1);
 				        		}
 				        		else {
 				        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 				        			final File file1 = new File(savedir, player.getName() + ".json");
-				        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Mort", -1, "None", "None", "None", "None", "None", "None");
+				        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Mort", -1, "None", "None", "None", "None", "None", "None");
 				        			final String json = profileSerializationManager.serialize(profile);
 				        			FileUtils.save(file1, json);
 				        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -145,14 +144,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        		if(file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
-		        			final Profile profile1 = Profile.createProfile(player.getName(), profile.getGirlOrBoy(), "Vivant", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), args[2].toString(), profile.getNomRp());
+		        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), args[2].toString(), profile.getNomRp());
 		        			final String json1 = profileSerializationManager.serialize(profile1);
 		        			FileUtils.save(file, json1);
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 			        			final File file1 = new File(savedir, player.getName() + ".json");
-			        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Vivant", -1, "None", "None", "None", "None", args[2].toString(), "None");
+			        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", "None", "None", args[2].toString(), "None");
 			        			final String json = profileSerializationManager.serialize(profile);
 			        			FileUtils.save(file1, json);
 			        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -162,14 +161,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        		if(file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
-		        			final Profile profile1 = Profile.createProfile(player.getName(), profile.getGirlOrBoy(), "Vivant", profile.getAge(), args[2].toString(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+		        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", profile.getAge(), args[2].toString(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 		        			final String json1 = profileSerializationManager.serialize(profile1);
 		        			FileUtils.save(file, json1);
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 			        			final File file1 = new File(savedir, player.getName() + ".json");
-			        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Vivant", -1, args[2].toString(), "None", "None", "None", "None", "None");
+			        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, args[2].toString(), "None", "None", "None", "None", "None");
 			        			final String json = profileSerializationManager.serialize(profile);
 			        			FileUtils.save(file1, json);
 			        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -179,14 +178,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        		if(file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
-		        			final Profile profile1 = Profile.createProfile(player.getName(), profile.getGirlOrBoy(), "Vivant", profile.getAge(), profile.getTitre(), args[2].toString(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+		        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", profile.getAge(), profile.getTitre(), args[2].toString(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 		        			final String json1 = profileSerializationManager.serialize(profile1);
 		        			FileUtils.save(file, json1);
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 			        			final File file1 = new File(savedir, player.getName() + ".json");
-			        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Vivant", -1, "None", args[2].toString(), "None", "None", "None", "None");
+			        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", args[2].toString(), "None", "None", "None", "None");
 			        			final String json = profileSerializationManager.serialize(profile);
 			        			FileUtils.save(file1, json);
 			        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -196,14 +195,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        		if(file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
-		        			final Profile profile1 = Profile.createProfile(player.getName(), profile.getGirlOrBoy(), "Vivant", profile.getAge(), profile.getTitre(), profile.getReligion(), args[2].toString(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+		        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", profile.getAge(), profile.getTitre(), profile.getReligion(), args[2].toString(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 		        			final String json1 = profileSerializationManager.serialize(profile1);
 		        			FileUtils.save(file, json1);
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 			        			final File file1 = new File(savedir, player.getName() + ".json");
-			        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Vivant", -1, "None", "None", args[2].toString(), "None", "None", "None");
+			        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", args[2].toString(), "None", "None", "None");
 			        			final String json = profileSerializationManager.serialize(profile);
 			        			FileUtils.save(file1, json);
 			        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -213,14 +212,14 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        		if(file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
-		        			final Profile profile1 = Profile.createProfile(player.getName(), profile.getGirlOrBoy(), "Vivant", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), args[2].toString(), profile.getRace(), profile.getNomRp());
+		        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), args[2].toString(), profile.getRace(), profile.getNomRp());
 		        			final String json1 = profileSerializationManager.serialize(profile1);
 		        			FileUtils.save(file, json1);
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 			        			final File file1 = new File(savedir, player.getName() + ".json");
-			        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Vivant", -1, "None", "None", "None", args[2].toString() , "None", "None");
+			        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", "None", args[2].toString() , "None", "None");
 			        			final String json = profileSerializationManager.serialize(profile);
 			        			FileUtils.save(file1, json);
 			        			player.sendMessage(ChatColor.GREEN + "Profil créé");
@@ -237,7 +236,6 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		            		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String filtered2 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getNomRp().toString());
-		        			String filtered3 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getGirlOrBoy().toString());
 		        			String filtered4 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getDeadoralive().toString());
 		        			String filtered5 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getTitre().toString());
 		        			String filtered6 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getReligion().toString());
@@ -249,9 +247,10 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        			String wiki = RpCard.INSTANCE.getConfig().getString("liens.wiki");
 		        			player.sendMessage("§lJoueur" + filtered2 + " :");
 		        			player.sendMessage("Race : " + filtered9);
-		        			player.sendMessage("Age : " + filtered10);
+		        			if (RpCard.INSTANCE.getConfig().get("age_enabled").equals("true")) {
+			        			player.sendMessage("Age : " + filtered10);
+							}
 		        			player.sendMessage("Status : " + filtered4);
-		        			player.sendMessage("Genre : " + filtered3);
 		        			player.sendMessage("Titre : " + filtered5);
 		        			player.sendMessage("Religion : " + filtered6);
 		        			player.sendMessage("Métier : " + filtered7);
@@ -263,7 +262,7 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		            		}
 		        		else {
 		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-		        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Vivant", -1, "None", "None", "None", "None", "None", "None");
+		        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", "None", "None", "None", "None");
 		        			final String json = profileSerializationManager.serialize(profile);
 
 		        			FileUtils.save(file, json);
@@ -275,17 +274,32 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		            	if(file2.exists()) {
 		            		final String json = FileUtils.loadContent(file2);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
-		        			String filtered9 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getDeadoralive().toString());
+		        			String filtered2 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getNomRp().toString());
+		        			String filtered4 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getDeadoralive().toString());
+		        			String filtered5 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getTitre().toString());
+		        			String filtered6 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getReligion().toString());
+		        			String filtered7 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getProfession().toString());
+		        			String filtered8 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getOrigine().toString());
+		        			String filtered9 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getRace().toString());
 		        			Integer age = profile.getAge();
 		        			String filtered10 = CharMatcher.anyOf(charsToRemove).removeFrom(age.toString());
-		        			player.sendMessage("§lJoueur :");
-		        			player.sendMessage("Age : " + filtered10);
-		        			player.sendMessage("Status : " + filtered9);
+		        			String wiki = RpCard.INSTANCE.getConfig().getString("liens.wiki");
+		        			player.sendMessage("§lJoueur" + filtered2 + " :");
+		        			player.sendMessage("Race : " + filtered9);
+		        			if (RpCard.INSTANCE.getConfig().get("age_enabled").equals("true")) {
+			        			player.sendMessage("Age : " + filtered10);
+							}
+		        			player.sendMessage("Status : " + filtered4);
+		        			player.sendMessage("Titre : " + filtered5);
+		        			player.sendMessage("Religion : " + filtered6);
+		        			player.sendMessage("Métier : " + filtered7);
+		        			player.sendMessage("Origine : " + filtered8);
+		        			player.sendMessage(wiki + player.getName());
 		            	}
 		            	else {
 		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
 		        			final File file1 = new File(savedir, player.getName() + ".json");
-		        			final Profile profile = Profile.createProfile(player.getName(), "Inconnu", "Vivant", -1, "None", "None", "None", "None", "None", "None");
+		        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", "None", "None", "None", "None");
 		        			final String json = profileSerializationManager.serialize(profile);
 
 		        			FileUtils.save(file1, json);
@@ -304,7 +318,7 @@ public class Rpf implements @Nullable CommandExecutor, TabCompleter{
 		        if (args.length == 1) return Arrays.asList("set", "see");
 		        if (args[0].equalsIgnoreCase("set") && args.length == 2) return Arrays.asList("genre", "race", "age", "status", "titre", "religion", "métier", "origine");
 		        if (args[1].equalsIgnoreCase("status") && args.length == 3) return Arrays.asList("vivant", "mort");
-		        if (args[1].equalsIgnoreCase("genre") && args.length == 3) return Arrays.asList("garçon", "fille");
+		        if (args[1].equalsIgnoreCase("genre") && args.length == 3) return Arrays.asList("garçon");
 				return null;
 		        }
 

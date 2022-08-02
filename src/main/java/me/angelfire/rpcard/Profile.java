@@ -1,14 +1,15 @@
 package me.angelfire.rpcard;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
 import java.util.UUID;
 
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
+
+import me.angelfire.rpcard.json.ProfileSerializationManager;
+import me.angelfire.rpcard.utils.FileUtils;
 
 public class Profile {
-	
-	private String girlOrBoy;
+
 	private String playername;
 	private int age;
 	private String titre;
@@ -18,11 +19,11 @@ public class Profile {
 	private String race;
 	private String nomRp;
 	private String deadoralive;
-	
-	
-	public Profile(String playername, String girlOrBoy, String deadoralive, Integer age, String titre, String religion, String profession, String origine, String race, String nomRp) {
+	private UUID uuid;
+
+
+	public Profile(String playername, String deadoralive, Integer age, String titre, String religion, String profession, String origine, String race, String nomRp, UUID uuid) {
 		super();
-		this.girlOrBoy = girlOrBoy;
 		this.playername = playername;
 		this.deadoralive = deadoralive;
 		this.age = age;
@@ -32,26 +33,17 @@ public class Profile {
 		this.origine = origine;
 		this.race = race;
 		this.nomRp = nomRp;
+		this.uuid = uuid;
 
 	}
 
 
-	
+
 
 	public int getAge() {
 		return age;
 	}
 
-
-	public void setAge(int age) {
-		this.age = age;
-	}
-
-
-	public String getGirlOrBoy() {
-		return girlOrBoy;
-	}
-	
 	public String getPlayername() {
 		return playername;
 	}
@@ -62,27 +54,9 @@ public class Profile {
 	}
 
 
-
-
-	public void setTitre(String titre) {
-		this.titre = titre;
-	}
-
-
-
-
 	public String getReligion() {
 		return religion;
 	}
-
-
-
-
-	public void setReligion(String religion) {
-		this.religion = religion;
-	}
-
-
 
 
 	public String getProfession() {
@@ -90,27 +64,9 @@ public class Profile {
 	}
 
 
-
-
-	public void setProfession(String profession) {
-		this.profession = profession;
-	}
-
-
-
-
 	public String getOrigine() {
 		return origine;
 	}
-
-
-
-
-	public void setOrigine(String origine) {
-		this.origine = origine;
-	}
-
-
 
 
 	public String getRace() {
@@ -118,56 +74,34 @@ public class Profile {
 	}
 
 
-
-
-	public void setRace(String race) {
-		this.race = race;
-	}
-
-
-
-
 	public String getNomRp() {
 		return nomRp;
 	}
 
 
-
-
-	public void setNomRp(String nomRp) {
-		this.nomRp = nomRp;
-	}
-
-
-
-
-	public void setGirlOrBoy(String girlOrBoy) {
-		this.girlOrBoy = girlOrBoy;
-	}
-
-
-
-
-	public void setPlayername(String playername) {
-		this.playername = playername;
-	}
-	
-	public void setDeadoralive(String deadoralive) {
-		this.deadoralive = deadoralive;
-	}
-
-
-	
 	public String getDeadoralive() {
 		return deadoralive;
 	}
 
+	public UUID getUuid() {
+		return uuid;
+	}
 
 
 
-	public static Profile createProfile(String playername, String girlOrBoy, String deadoralive, Integer age, String titre, String religion, String profession, String origine, String race, String nomRp) {
-		return new Profile( playername,  girlOrBoy,  deadoralive,  age,  titre,  religion,  profession,  origine,  race,  nomRp);
 
+	public static Profile createProfile(UUID uuid, String playername, String deadoralive, Integer age, String titre, String religion, String profession, String origine, String race, String nomRp) {
+		return new Profile( playername, deadoralive,  age,  titre,  religion,  profession,  origine,  race,  nomRp, uuid);
+
+	}
+
+	public static Profile getProfile(UUID playerUuid) {
+		File savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
+		final File file = new File(savedir, playerUuid.toString() + ".json");
+		final String json = FileUtils.loadContent(file);
+		final ProfileSerializationManager profileSerializationManager = RpCard.INSTANCE.getProfileSerializationManager();
+		final Profile profile = profileSerializationManager.deserialize(json);
+		return createProfile(playerUuid, Bukkit.getPlayer(playerUuid).getName(), profile.getDeadoralive(), profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 	}
 
 }

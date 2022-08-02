@@ -26,8 +26,6 @@ public final class RpCard extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-
-
 	public void setProfileSerializationManager(ProfileSerializationManager profileSerializationManager) {
 		this.profileSerializationManager = profileSerializationManager;
 	}
