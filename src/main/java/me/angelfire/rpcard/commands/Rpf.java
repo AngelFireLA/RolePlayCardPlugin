@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -39,11 +40,11 @@ public class Rpf implements CommandExecutor, TabCompleter{
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		Player player = (Player) sender;
-		final File file = new File(savedir, player.getName() + ".json");
-		final ProfileSerializationManager profileSerializationManager = RpCard.INSTANCE.getProfileSerializationManager();
     	if (args.length == 0) return false;
+		final ProfileSerializationManager profileSerializationManager = RpCard.INSTANCE.getProfileSerializationManager();
 		        if (args[0].equalsIgnoreCase("set")) {
+		    		Player player = (Player) sender;
+		    		final File file = new File(savedir, player.getName() + ".json");
 		        	if(args[1].equalsIgnoreCase("genre")) {
 		        		if (args[2].equalsIgnoreCase("garçon")) {
 		        			if(file.exists()) {
@@ -230,6 +231,8 @@ public class Rpf implements CommandExecutor, TabCompleter{
 		        	String charsToRemove = "[]";
 
 		        	if (args.length == 1) {
+			    		Player player = (Player) sender;
+			    		final File file = new File(savedir, player.getName() + ".json");
 
 		        		if(file.exists()) {
 
@@ -284,26 +287,26 @@ public class Rpf implements CommandExecutor, TabCompleter{
 		        			Integer age = profile.getAge();
 		        			String filtered10 = CharMatcher.anyOf(charsToRemove).removeFrom(age.toString());
 		        			String wiki = RpCard.INSTANCE.getConfig().getString("liens.wiki");
-		        			player.sendMessage("§lJoueur" + filtered2 + " :");
-		        			player.sendMessage("Race : " + filtered9);
+		        			sender.sendMessage("§lJoueur" + filtered2 + " :");
+		        			sender.sendMessage("Race : " + filtered9);
 		        			if (RpCard.INSTANCE.getConfig().get("age_enabled").equals("true")) {
-			        			player.sendMessage("Age : " + filtered10);
+			        			sender.sendMessage("Age : " + filtered10);
 							}
-		        			player.sendMessage("Status : " + filtered4);
-		        			player.sendMessage("Titre : " + filtered5);
-		        			player.sendMessage("Religion : " + filtered6);
-		        			player.sendMessage("Métier : " + filtered7);
-		        			player.sendMessage("Origine : " + filtered8);
-		        			player.sendMessage(wiki + player.getName());
+		        			sender.sendMessage("Status : " + filtered4);
+		        			sender.sendMessage("Titre : " + filtered5);
+		        			sender.sendMessage("Religion : " + filtered6);
+		        			sender.sendMessage("Métier : " + filtered7);
+		        			sender.sendMessage("Origine : " + filtered8);
+		        			sender.sendMessage(wiki + profile.getPlayername());
 		            	}
 		            	else {
-		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-		        			final File file1 = new File(savedir, player.getName() + ".json");
-		        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", "None", "None", "None", "None");
+		        			sender.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
+		        			final File file1 = new File(savedir, args[1] + ".json");
+		        			final Profile profile = Profile.createProfile(Bukkit.getPlayerUniqueId(args[1]), args[1], "Vivant", -1, "None", "None", "None", "None", "None", "None");
 		        			final String json = profileSerializationManager.serialize(profile);
 
 		        			FileUtils.save(file1, json);
-		        			player.sendMessage(ChatColor.GREEN + "Profil créé");
+		        			sender.sendMessage(ChatColor.GREEN + "Profil créé");
 
 		        		}
 					}
