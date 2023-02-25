@@ -25,7 +25,6 @@ public class Rpf implements CommandExecutor, TabCompleter{
 
 	private File savedir;
 	public Rpf () {
-		this.savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
 		RpCard.INSTANCE.getConfig();
 	}
 
@@ -38,6 +37,27 @@ public class Rpf implements CommandExecutor, TabCompleter{
         return true;
     }
 
+	public static File findFileInDirectory(File directory, String fileName) {
+	    File[] files = directory.listFiles();
+	    if (files != null) {
+	        for (File file : files) {
+	            if (file.isDirectory()) {
+	                File foundFile = findFileInDirectory(file, fileName);
+	                if (foundFile != null) {
+	                    return foundFile;
+	                }
+	            } else {
+	                if (file.getName().equals(fileName)) {
+	                    return file;
+	                }
+	            }
+	        }
+	    }
+	    return null;
+	}
+
+
+
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
     	if (args.length == 0) return false;
@@ -45,25 +65,26 @@ public class Rpf implements CommandExecutor, TabCompleter{
 		        if (args[0].equalsIgnoreCase("set")) {
 		        	if(args.length >= 3) {
 		    		Player player = (Player) sender;
-		    		final File file = new File(savedir, player.getName() + ".json");
+		    		savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
+		    		final File file = findFileInDirectory(savedir, player.getName() + ".json");
 		        	if(args[1].equalsIgnoreCase("age")) {
 		        		if (isInt(args[2])) {
-		        		if(file.exists()) {
-		        			final String json = FileUtils.loadContent(file);
-		        			final Profile profile = profileSerializationManager.deserialize(json);
-		        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), profile.getDeadoralive(), Integer.parseInt(args[2]), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
-		        			final String json1 = profileSerializationManager.serialize(profile1);
-		        			FileUtils.save(file, json1);
-		        			player.sendMessage(ChatColor.GREEN + "L'âge a été modifié.");
-		        		}
-		        		else {
-		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-		        			final File file1 = new File(savedir, player.getName() + ".json");
-		        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "None", Integer.parseInt(args[2]), "None", "None", "None", "None", "None", "None");
-		        			final String json = profileSerializationManager.serialize(profile);
-		        			FileUtils.save(file1, json);
-		        			player.sendMessage(ChatColor.GREEN + "Profil créé avec l'âge choisi.");
-						}
+		        			if(file != null && file.exists()) {
+		        				final String json = FileUtils.loadContent(file);
+		        				final Profile profile = profileSerializationManager.deserialize(json);
+		        				final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), profile.getDeadoralive(), Integer.parseInt(args[2]), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+		        				final String json1 = profileSerializationManager.serialize(profile1);
+		        				FileUtils.save(file, json1);
+		        				player.sendMessage(ChatColor.GREEN + "L'âge a été modifié.");
+		        			}
+		        			else {
+		        				player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
+		        				final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
+		        				final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "None", Integer.parseInt(args[2]), "None", "None", "None", "None", "None", "None");
+		        				final String json = profileSerializationManager.serialize(profile);
+		        				FileUtils.save(file1, json);
+		        				player.sendMessage(ChatColor.GREEN + "Profil créé avec l'âge choisi.");
+		        			}
 		        		}
 		        		else {
 		        			player.sendMessage("Veuillez insérez un nombre");
@@ -71,7 +92,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 		        	}
 		        	else if (args[1].equalsIgnoreCase("status")) {
 		        		if (args[2].equalsIgnoreCase("vivant")) {
-			        		if(file.exists()) {
+			        		if(file != null && file.exists()) {
 				        		final String json = FileUtils.loadContent(file);
 			        			final Profile profile = profileSerializationManager.deserialize(json);
 			        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
@@ -81,7 +102,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 				        		}
 				        		else {
 				        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-				        			final File file1 = new File(savedir, player.getName() + ".json");
+				        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
 				        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", "None", "None", "None", "None");
 				        			final String json = profileSerializationManager.serialize(profile);
 				        			FileUtils.save(file1, json);
@@ -89,7 +110,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 								}
 		        		}
 		        		else if (args[2].equalsIgnoreCase("mort")) {
-			        		if(file.exists()) {
+			        		if(file != null && file.exists()) {
 				        		final String json = FileUtils.loadContent(file);
 			        			final Profile profile = profileSerializationManager.deserialize(json);
 			        			final Profile profile1 = Profile.createProfile(player.getUniqueId(), player.getName(), "Mort", profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
@@ -100,7 +121,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 				        		}
 				        		else {
 				        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-				        			final File file1 = new File(savedir, player.getName() + ".json");
+				        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
 				        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Mort", -1, "None", "None", "None", "None", "None", "None");
 				        			final String json = profileSerializationManager.serialize(profile);
 				        			FileUtils.save(file1, json);
@@ -110,7 +131,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 
 		        	}
 		        	else if (args[1].equalsIgnoreCase("race")) {
-		        		if(file.exists()) {
+		        		if(file != null && file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String race = "";
@@ -128,7 +149,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-			        			final File file1 = new File(savedir, player.getName() + ".json");
+			        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
 			        			String race = "";
 			        			int args_lenght = 0;
 			        			for(String arg : args) {
@@ -144,7 +165,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 							}
 		        	}
 		        	else if (args[1].equalsIgnoreCase("titre")) {
-		        		if(file.exists()) {
+		        		if(file != null && file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String titre = "";
@@ -163,7 +184,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-			        			final File file1 = new File(savedir, player.getName() + ".json");
+			        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
 			        			String titre = "";
 			        			int args_lenght = 0;
 			        			for(String arg : args) {
@@ -179,7 +200,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 							}
 		        	}
 		        	else if (args[1].equalsIgnoreCase("religion")) {
-		        		if(file.exists()) {
+		        		if(file != null && file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String religion = "";
@@ -198,7 +219,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-			        			final File file1 = new File(savedir, player.getName() + ".json");
+			        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
 			        			String religion = "";
 			        			int args_lenght = 0;
 			        			for(String arg : args) {
@@ -214,7 +235,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 							}
 		        	}
 		        	else if (args[1].equalsIgnoreCase("métier")) {
-		        		if(file.exists()) {
+		        		if(file != null && file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String metier = "";
@@ -232,7 +253,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-			        			final File file1 = new File(savedir, player.getName() + ".json");
+			        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
 			        			String metier = "";
 			        			int args_lenght = 0;
 			        			for(String arg : args) {
@@ -248,7 +269,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 							}
 		        	}
 		        	else if (args[1].equalsIgnoreCase("origine")) {
-		        		if(file.exists()) {
+		        		if(file != null && file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String origine = "";
@@ -266,7 +287,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-			        			final File file1 = new File(savedir, player.getName() + ".json");
+			        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
 			        			String origine = "";
 			        			int args_lenght = 0;
 			        			for(String arg : args) {
@@ -282,7 +303,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 							}
 		        	}
 		        	else if (args[1].equalsIgnoreCase("nom_rp")) {
-		        		if(file.exists()) {
+		        		if(file != null && file.exists()) {
 			        		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String nom_rp = "";
@@ -300,7 +321,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 			        		}
 			        		else {
 			        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-			        			final File file1 = new File(savedir, player.getName() + ".json");
+			        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
 			        			String nom_rp = "";
 			        			int args_lenght = 0;
 			        			for(String arg : args) {
@@ -322,13 +343,17 @@ public class Rpf implements CommandExecutor, TabCompleter{
 
 		        	if (args.length == 1) {
 			    		Player player = (Player) sender;
-			    		final File file = new File(savedir, player.getName() + ".json");
+			    		savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
+			    		final File file = findFileInDirectory(savedir, player.getName() + ".json");
 
-		        		if(file.exists()) {
+		        		if(file != null && file.exists()) {
 
 		            		final String json = FileUtils.loadContent(file);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String filtered2 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getNomRp().toString());
+		        			if (filtered2.equalsIgnoreCase("None")){
+		        				filtered2 = profile.getPlayername().toString();
+		        			}
 		        			String filtered4 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getDeadoralive().toString());
 		        			String filtered5 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getTitre().toString());
 		        			String filtered6 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getReligion().toString());
@@ -355,19 +380,24 @@ public class Rpf implements CommandExecutor, TabCompleter{
 		            		}
 		        		else {
 		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
+		        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , player.getName() + ".json");
 		        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", "None", "None", "None", "None");
 		        			final String json = profileSerializationManager.serialize(profile);
 
-		        			FileUtils.save(file, json);
+		        			FileUtils.save(file1, json);
 		        			player.sendMessage(ChatColor.GREEN + "Profil créé");
 		        		}
 		        	}
 		        	else if (args.length == 2) {
-		        		final File file2 = new File(savedir, args[1] + ".json");
-		            	if(file2.exists()) {
+		        		savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
+		        		final File file2 = findFileInDirectory(savedir, args[1] + ".json");
+		            	if(file2 != null && file2.exists()) {
 		            		final String json = FileUtils.loadContent(file2);
 		        			final Profile profile = profileSerializationManager.deserialize(json);
 		        			String filtered2 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getNomRp().toString());
+		        			if (filtered2.equalsIgnoreCase("None")){
+		        				filtered2 = profile.getPlayername().toString();
+		        			}
 		        			String filtered4 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getDeadoralive().toString());
 		        			String filtered5 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getTitre().toString());
 		        			String filtered6 = CharMatcher.anyOf(charsToRemove).removeFrom(profile.getReligion().toString());
@@ -391,13 +421,79 @@ public class Rpf implements CommandExecutor, TabCompleter{
 		            	}
 		            	else {
 		        			sender.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
-		        			final File file1 = new File(savedir, args[1] + ".json");
+		        			final File file1;
+		        			if (Bukkit.getPlayer(args[1]) != null) {
+		        				file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + Bukkit.getPlayer(args[1]).getUniqueId()) , args[1] + ".json");
+		        			}
+		        			else {
+		        				file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/custom") , args[1] + ".json");
+		        			}
 		        			final Profile profile = Profile.createProfile(Bukkit.getPlayerUniqueId(args[1]), args[1], "Vivant", -1, "None", "None", "None", "None", "None", "None");
 		        			final String json = profileSerializationManager.serialize(profile);
 
 		        			FileUtils.save(file1, json);
 		        			sender.sendMessage(ChatColor.GREEN + "Profil créé");
 
+		        		}
+					}
+		        }
+		        if (args[0].equalsIgnoreCase("create")) {
+		        	if (args.length >= 2 && sender.hasPermission("rpcard.create")) {
+			    		Player player = (Player) sender;
+			    		savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
+			    		final File file = findFileInDirectory(savedir, args[1] + ".json");
+
+		        		if(file == null) {
+		        			player.sendMessage(ChatColor.RED + "Profil non existant ! Création en cours...");
+		        			final File file1 = new File(new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId()) , args[1] + ".json");
+		        			final Profile profile = Profile.createProfile(player.getUniqueId(), player.getName(), "Vivant", -1, "None", "None", "None", "None", "None", "None");
+		        			final String json = profileSerializationManager.serialize(profile);
+		        			FileUtils.save(file1, json);
+		        			player.sendMessage(ChatColor.GREEN + "Profil créé");
+
+		        		}
+	        			else {
+	        				player.sendMessage(ChatColor.RED + "Profil existe déjà !");
+	        			}
+
+		        	}
+
+		        }
+		        if (args[0].equalsIgnoreCase("list")) {
+
+		        	if (args.length == 1) {
+			    		Player player = (Player) sender;
+			    		savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
+			    		final File file = new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId());
+		        		if(file.exists() && file.isDirectory()) {
+		        			File[] files = file.listFiles();
+		        			player.sendMessage("Liste de vos Profiles :");
+		        			for(File file1 : files) {
+		        				player.sendMessage(" - " + file1.getName().substring(0, file1.getName().lastIndexOf('.')));
+		        			}
+		            	}
+		        		else {
+		        			player.sendMessage(ChatColor.RED + "Vous n'avez pas encore créer de profils !");
+		        		}
+		        	}
+		        	else if (args.length == 2) {
+		        		if (Bukkit.getPlayer(args[1]) != null) {
+		        			Player player = Bukkit.getPlayer(args[1]);
+		        			savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
+		        			final File file = new File(RpCard.INSTANCE.getDataFolder(), "/profiles/" + player.getUniqueId());
+		        			if(file.exists() && file.isDirectory()) {
+		        				File[] files = file.listFiles();
+		        				sender.sendMessage("Liste de vos Profiles :");
+		        				for(File file1 : files) {
+		        					sender.sendMessage(" - " + file1.getName());
+		        				}
+		        			}
+		        			else {
+		        				sender.sendMessage(ChatColor.RED + "Ce joueur n'a pas encore de profiles !");
+		        			}
+		        		}
+		        		else {
+		        			sender.sendMessage(ChatColor.RED + "Ce joueur n'a pas encore de profiles !");
 		        		}
 					}
 		        }
@@ -408,7 +504,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 
 		    @Override
 		    public List<String> onTabComplete(final CommandSender sender, @NotNull Command cmd, @NotNull String alias, @NotNull String[] args) {
-		        if (args.length == 1) return Arrays.asList("set", "see");
+		        if (args.length == 1) return Arrays.asList("set", "see", "list", "create");
 		        if (args[0].equalsIgnoreCase("set") && args.length == 2) return Arrays.asList("nom_rp", "race", "age", "status", "titre", "religion", "métier", "origine");
 		        if (args[1].equalsIgnoreCase("status") && args.length == 3) return Arrays.asList("vivant", "mort");
 				return null;

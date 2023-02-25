@@ -95,13 +95,13 @@ public class Profile {
 
 	}
 
-	public static Profile getProfile(UUID playerUuid) {
-		File savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles");
-		final File file = new File(savedir, playerUuid.toString() + ".json");
+	public static Profile getProfile(String pname) {
+		File savedir = new File(RpCard.INSTANCE.getDataFolder(), "/profiles/"+ pname.toString());
+		final File file = new File(savedir, pname + ".json");
 		final String json = FileUtils.loadContent(file);
 		final ProfileSerializationManager profileSerializationManager = RpCard.INSTANCE.getProfileSerializationManager();
 		final Profile profile = profileSerializationManager.deserialize(json);
-		return createProfile(playerUuid, Bukkit.getPlayer(playerUuid).getName(), profile.getDeadoralive(), profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
+		return createProfile(Bukkit.getPlayer(pname).getUniqueId(), pname, profile.getDeadoralive(), profile.getAge(), profile.getTitre(), profile.getReligion(), profile.getProfession(), profile.getOrigine(), profile.getRace(), profile.getNomRp());
 	}
 
 }

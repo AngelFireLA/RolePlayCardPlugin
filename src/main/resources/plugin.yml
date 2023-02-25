@@ -1,5 +1,5 @@
 name: RoleplayCard
-version: '${project.version}'
+version: 1.1
 main: me.angelfire.rpcard.RpCard
 api-version: 1.19
 prefix: Plugin Started
@@ -7,3 +7,10 @@ authors: [ AngelFire ]
 description: Helps tracking who is who in the roleplay
 commands:
  rpcard:
+    description: Main command for the plugin
+ 
+permissions:
+    rpcard.create:
+        default: true
+    laboulangeriemmo.edit.others:
+        default: op
