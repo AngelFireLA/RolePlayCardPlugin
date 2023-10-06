@@ -504,7 +504,7 @@ public class Rpf implements CommandExecutor, TabCompleter{
 
 		    @Override
 		    public List<String> onTabComplete(final CommandSender sender, @NotNull Command cmd, @NotNull String alias, @NotNull String[] args) {
-		        if (args.length == 1) return Arrays.asList("set", "see", "list", "create");
+		        if (args.length == 1) return Arrays.asList("set", "see", "list", "create", "edit", "setothers");
 		        if (args[0].equalsIgnoreCase("set") && args.length == 2) return Arrays.asList("nom_rp", "race", "age", "status", "titre", "religion", "métier", "origine");
 		        if (args[1].equalsIgnoreCase("status") && args.length == 3) return Arrays.asList("vivant", "mort");
 				return null;
