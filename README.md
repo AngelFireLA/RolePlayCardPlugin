@@ -1,6 +1,6 @@
 # RolePlayCardPlugin
 
-Plugin 1.19 pour minecraft java.
+Plugin minecraft 1.19 permettant aux joueurs de se créer une fiche roleplay pour leur personnage.
 
 Fonctionnalités :
 - Créé une fiche rp et y ajouter ces différentes paramètres :
